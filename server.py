@@ -76,7 +76,7 @@ class PromptServer():
         self.messages = asyncio.Queue()
         self.number = 0
 
-        #middlewares = [cache_control]
+        middlewares = [cache_control]
         #if args.enable_cors_header:
         #    middlewares.append(create_cors_middleware(args.enable_cors_header))
 
