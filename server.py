@@ -79,6 +79,7 @@ class PromptServer():
         self.number = 0
 
         logging.info("Async debug info - running  PromptServer -> middlewares")
+
         middlewares = [cache_control]
         #if args.enable_cors_header:
         #    middlewares.append(create_cors_middleware(args.enable_cors_header))
