@@ -124,7 +124,7 @@ class PromptServer():
             return web.FileResponse(os.path.join(self.web_root, "index.html"))
             
         @routes.get("/ping")
-        def get_endpoint_ping():
+        def get_endpoint_ping(request):
             return ""
             
         @routes.get("/embeddings")
