@@ -40,6 +40,8 @@ async def send_socket_catch_exception(function, message):
 
 @web.middleware
 async def cache_control(request: web.Request, handler):
+    logging.info("Async debug info - cache_control {}".format(request))
+    logging.info("Async debug info - cache_control on path{}".format(request.path))
     response: web.Response = await handler(request)
     if request.path.endswith('.js') or request.path.endswith('.css'):
         response.headers.setdefault('Cache-Control', 'no-cache')
@@ -76,6 +78,7 @@ class PromptServer():
         self.messages = asyncio.Queue()
         self.number = 0
 
+        logging.info("Async debug info - running  PromptServer -> middlewares")
         middlewares = [cache_control]
         #if args.enable_cors_header:
         #    middlewares.append(create_cors_middleware(args.enable_cors_header))
