@@ -76,9 +76,9 @@ class PromptServer():
         self.messages = asyncio.Queue()
         self.number = 0
 
-        middlewares = [cache_control]
-        if args.enable_cors_header:
-            middlewares.append(create_cors_middleware(args.enable_cors_header))
+        #middlewares = [cache_control]
+        #if args.enable_cors_header:
+        #    middlewares.append(create_cors_middleware(args.enable_cors_header))
 
         max_upload_size = round(args.max_upload_size * 1024 * 1024)
         self.app = web.Application(client_max_size=max_upload_size, middlewares=middlewares)
@@ -124,8 +124,11 @@ class PromptServer():
             return web.FileResponse(os.path.join(self.web_root, "index.html"))
             
         @routes.get("/ping")
-        def get_endpoint_ping(request):
-            return ""
+        def ping(request):
+            """
+            Healthcheck function.
+            """
+            return {'status': 'Healthy'}
             
         @routes.get("/embeddings")
         def get_embeddings(self):
