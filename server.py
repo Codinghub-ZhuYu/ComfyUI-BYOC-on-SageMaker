@@ -128,11 +128,8 @@ class PromptServer():
             return web.FileResponse(os.path.join(self.web_root, "index.html"))
             
         @routes.get("/ping")
-        def ping(request):
-            """
-            Healthcheck function.
-            """
-            return {'status': 'Healthy'}
+        async def get_ping(request):
+            return web.Response(status=200, text='Hi, SD3 on SageMaker')
             
         @routes.get("/embeddings")
         def get_embeddings(self):
