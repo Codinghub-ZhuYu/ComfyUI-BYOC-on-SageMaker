@@ -130,6 +130,10 @@ class PromptServer():
         @routes.get("/ping")
         async def get_ping(request):
             return web.Response(status=200, text='Hi, SD3 on SageMaker')
+        
+        @routes.post("/invocations")
+        async def post_invocations(request):
+            return web.Response(status=200, text="Async debug info - cache_control {}".format(request))
             
         @routes.get("/embeddings")
         def get_embeddings(self):
