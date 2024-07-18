@@ -133,7 +133,43 @@ class PromptServer():
         
         @routes.post("/invocations")
         async def post_invocations(request):
-            return web.Response(status=200, text="Async debug info - cache_control {}".format(request))
+            logging.info("got prompt")
+            resp_code = 200
+            out_string = ""
+            json_data =  await request.json()
+            json_data = self.trigger_on_prompt(json_data)
+
+            if "number" in json_data:
+                number = float(json_data['number'])
+            else:
+                number = self.number
+                if "front" in json_data:
+                    if json_data['front']:
+                        number = -number
+
+                self.number += 1
+
+            if "prompt" in json_data:
+                prompt = json_data["prompt"]
+                valid = execution.validate_prompt(prompt)
+                extra_data = {}
+                if "extra_data" in json_data:
+                    extra_data = json_data["extra_data"]
+
+                if "client_id" in json_data:
+                    extra_data["client_id"] = json_data["client_id"]
+                if valid[0]:
+                    prompt_id = str(uuid.uuid4())
+                    outputs_to_execute = valid[2]
+                    self.prompt_queue.put((number, prompt_id, prompt, extra_data, outputs_to_execute))
+                    response = {"prompt_id": prompt_id, "number": number, "node_errors": valid[3]}
+                    return web.json_response(response)
+                else:
+                    logging.warning("invalid prompt: {}".format(valid[1]))
+                    return web.json_response({"error": valid[1], "node_errors": valid[3]}, status=400)
+            else:
+                return web.json_response({"error": "no prompt", "node_errors": []}, status=400)
+
             
         @routes.get("/embeddings")
         def get_embeddings(self):
